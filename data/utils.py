@@ -6,7 +6,17 @@ import torch.nn.functional as F
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
 
-def parse_path_file(path_file):
+def iterdir(path, ftype=None, cnt=None):
+    if isinstance(ftype, str):
+        ftype = [ftype]
+    return [
+               (fn, os.path.join(path, fn))
+               for fn in os.listdir(path)
+               if ftype is None or fn.split(".")[-1] in ftype
+           ][:cnt]
+
+
+def parse_path_file(path_file, ftype):
     index = []
     with open(path_file, "r", encoding="utf-8") as f:
         for path in f.readlines():
